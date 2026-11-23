@@ -2,25 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Recipe Organizer</title>
 <style>
 body{font-family:Arial;background:#fff7ed;padding:25px}
-main{max-width:650px;margin:auto;background:white;padding:30px;border-radius:16px}
-input,textarea{width:100%;padding:12px;margin:8px 0;box-sizing:border-box;border:1px solid #fdba74;border-radius:7px}
-textarea{height:90px}
-button{background:#ea580c;color:white;border:0;padding:12px 18px;border-radius:7px;cursor:pointer}
-.recipe{background:#ffedd5;padding:20px;margin-top:15px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+main{max-width:650px;margin:auto;background:white;padding:25px;border-radius:15px}
+input,textarea{width:100%;box-sizing:border-box;padding:12px;margin:8px 0;border:1px solid #fdba74;border-radius:8px}
+textarea{height:100px}
+button{background:#ea580c;color:white;border:0;padding:11px 17px;border-radius:7px;cursor:pointer}
+.recipe{background:#ffedd5;padding:15px;margin-top:12px;border-radius:9px}
 </style>
 </head>
 <body>
 <main>
 <h1>Recipe Organizer</h1>
 <p>Save and organize your favorite recipes.</p>
-<input id="name" placeholder="Recipe name">
+<input id="title" placeholder="Recipe name">
 <textarea id="ingredients" placeholder="Ingredients"></textarea>
 <textarea id="instructions" placeholder="Cooking instructions"></textarea>
 <button onclick="addRecipe()">Save Recipe</button>
+<p id="status"></p>
 <h2>My Recipes</h2>
 <div id="recipes"></div>
 </main>
@@ -31,37 +32,38 @@ function save(){
  render();
 }
 function addRecipe(){
- const name=document.getElementById("name");
- const ingredients=document.getElementById("ingredients");
- const instructions=document.getElementById("instructions");
- if(!name.value.trim()||!ingredients.value.trim()||!instructions.value.trim())return;
- recipes.unshift({
- name:name.value.trim(),
- ingredients:ingredients.value.trim(),
- instructions:instructions.value.trim()
- });
- name.value=ingredients.value=instructions.value="";
+ const title=document.getElementById("title").value.trim();
+ const ingredients=document.getElementById("ingredients").value.trim();
+ const instructions=document.getElementById("instructions").value.trim();
+ const status=document.getElementById("status");
+ if(!title||!ingredients||!instructions){
+  status.textContent="Please complete all fields.";
+  return;
+ }
+ recipes.unshift({title,ingredients,instructions});
+ document.getElementById("title").value="";
+ document.getElementById("ingredients").value="";
+ document.getElementById("instructions").value="";
+ status.textContent="Recipe saved successfully!";
  save();
 }
 function render(){
  const list=document.getElementById("recipes");
  list.innerHTML="";
- recipes.forEach((recipe,i)=>{
-  const item=document.createElement("div");
-  item.className="recipe";
-  const title=document.createElement("h2");
-  title.textContent=recipe.name;
-  const details=document.createElement("p");
-  details.textContent="Ingredients:\n"+recipe.ingredients+
-  "\n\nInstructions:\n"+recipe.instructions;
+ recipes.forEach((r,i)=>{
+  const card=document.createElement("div");
+  card.className="recipe";
+  const h=document.createElement("h3");
+  h.textContent=r.title;
+  const p=document.createElement("p");
+  p.textContent="Ingredients: "+r.ingredients;
+  const d=document.createElement("p");
+  d.textContent="Instructions: "+r.instructions;
   const btn=document.createElement("button");
-  btn.textContent="Delete Recipe";
-  btn.onclick=()=>{
-   recipes.splice(i,1);
-   save();
-  };
-  item.append(title,details,btn);
-  list.appendChild(item);
+  btn.textContent="Delete";
+  btn.onclick=()=>{recipes.splice(i,1);save();};
+  card.append(h,p,d,btn);
+  list.appendChild(card);
  });
 }
 render();
