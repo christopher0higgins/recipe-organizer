@@ -22,3 +22,12 @@ Enter the recipe name, ingredients and instructions.
 ## Running Locally
 
 Open `index.html` in a modern web browser.
+## Manual Testing Checklist
+
+- [ ] Save a recipe with all required information.
+- [ ] Check that the ingredient and instruction text is displayed.
+- [ ] Try an empty required field and review validation.
+
+### Test Notes
+
+Record the observed result and any reproducible issue after running the tests.
